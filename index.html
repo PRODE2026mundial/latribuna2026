@@ -287,6 +287,23 @@ nav a:hover,nav a.active{color:var(--g1);background:var(--g5);font-weight:600}
 .errbox{background:var(--redl);border:1px solid rgba(220,53,69,.2);border-radius:var(--r);padding:8px 11px;font-size:12px;color:var(--red);margin-bottom:7px}
 .anote{background:var(--bluel);border:1px solid #c7d9f8;border-radius:var(--r);padding:8px 11px;font-size:11px;color:var(--blue);margin-bottom:10px;font-weight:500}
 
+
+/* PRODE BANNER */
+.prode-banner{background:linear-gradient(135deg,#1a3a2a,#2d7a55 60%,#1e5c3a);border-radius:var(--rl);padding:18px 20px;margin-bottom:18px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(45,122,85,.25);border:1px solid rgba(82,183,136,.3)}
+.prode-banner::before{content:'🏆';position:absolute;right:-10px;bottom:-15px;font-size:80px;opacity:.12;pointer-events:none}
+.prode-banner::after{content:'⚽';position:absolute;right:40px;top:-10px;font-size:50px;opacity:.1;pointer-events:none}
+.prode-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:9px;font-weight:700;padding:2px 8px;border-radius:9px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.prode-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;color:white;line-height:1.2;margin-bottom:5px}
+.prode-title span{color:#a3f0c6}
+.prode-sub{font-size:12px;color:rgba(255,255,255,.7);line-height:1.4;margin-bottom:14px}
+.prode-btn{display:inline-flex;align-items:center;gap:7px;background:white;color:var(--g1);padding:9px 18px;border-radius:9px;font-size:13px;font-weight:700;text-decoration:none;transition:all .18s;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.prode-btn:hover{background:#f0faf4;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.prode-btn-icon{font-size:16px}
+.prode-players{display:flex;gap:-6px;margin-top:10px;align-items:center}
+.prode-avatar{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:12px;margin-left:-6px}
+.prode-avatar:first-child{margin-left:0}
+.prode-players-txt{font-size:10px;color:rgba(255,255,255,.6);margin-left:8px}
+
 footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;color:var(--t4);font-size:11px;background:var(--bg2);padding-bottom:72px}
 footer strong{color:var(--g1)}
 
@@ -412,6 +429,24 @@ footer strong{color:var(--g1)}
 
 <!-- ═══ SIDEBAR ═══ -->
 <div style="padding-top:18px;display:flex;flex-direction:column;gap:16px">
+
+
+  <!-- PRODE BANNER -->
+  <div class="prode-banner">
+    <div class="prode-tag">🎮 Nuevo</div>
+    <div class="prode-title">Jugá al <span>Prode</span><br>con tus amigos</div>
+    <div class="prode-sub">Pronosticá todos los partidos, armá tu grupo y competí por el título de mejor prode del Mundial.</div>
+    <a class="prode-btn" href="https://prode-mundial-2026-blond.vercel.app/?t=i97ges0j" target="_blank" rel="noopener">
+      <span class="prode-btn-icon">⚽</span>
+      Jugar al Prode
+    </a>
+    <div class="prode-players">
+      <div class="prode-avatar">👤</div>
+      <div class="prode-avatar">👤</div>
+      <div class="prode-avatar">👤</div>
+      <div class="prode-players-txt">Invitá a tus amigos</div>
+    </div>
+  </div>
 
   <!-- INTERACTIVE ZONE -->
   <div class="int-sb">
@@ -618,21 +653,29 @@ async function fetchMatches(){
 }
 
 function buildFallbackFixture(){
+  // ✅ Partidos REALES — Fase de grupos Mundial 2026 (horarios en ARG/UTC-3)
   const upcoming=[
-    {d:'11 jun',t:'22:00',h:'México',a:'Panamá',g:'Grupo A'},
-    {d:'12 jun',t:'20:00',h:'USA',a:'Cuba',g:'Grupo B'},
-    {d:'12 jun',t:'23:00',h:'Canadá',a:'Trinidad',g:'Grupo C'},
-    {d:'13 jun',t:'20:00',h:'Argentina',a:'Ecuador',g:'Grupo D'},
-    {d:'13 jun',t:'23:00',h:'Brasil',a:'Chile',g:'Grupo E'},
-    {d:'14 jun',t:'20:00',h:'Francia',a:'Arabia S.',g:'Grupo F'},
-    {d:'14 jun',t:'23:00',h:'España',a:'Japón',g:'Grupo G'},
-    {d:'15 jun',t:'20:00',h:'Portugal',a:'Sudáfrica',g:'Grupo H'},
+    {d:'11 jun',t:'22:00',h:'🇲🇽 México',a:'🇿🇦 Sudáfrica',g:'Grupo A'},
+    {d:'12 jun',t:'17:00',h:'🇧🇷 Brasil',a:'🇲🇦 Marruecos',g:'Grupo C'},
+    {d:'12 jun',t:'20:00',h:'🇩🇪 Alemania',a:'🇨🇮 Costa Marfil',g:'Grupo E'},
+    {d:'12 jun',t:'23:00',h:'🇦🇷 Argentina',a:'🇩🇿 Argelia',g:'Grupo J'},
+    {d:'13 jun',t:'17:00',h:'🇪🇸 España',a:'🇨🇻 Cabo Verde',g:'Grupo H'},
+    {d:'13 jun',t:'20:00',h:'🇺🇸 USA',a:'🇵🇾 Paraguay',g:'Grupo D'},
+    {d:'13 jun',t:'23:00',h:'🇫🇷 Francia',a:'🇸🇳 Senegal',g:'Grupo I'},
+    {d:'14 jun',t:'17:00',h:'🇵🇹 Portugal',a:'🇨🇴 Colombia',g:'Grupo K'},
+    {d:'14 jun',t:'20:00',h:'🇳🇱 P.Bajos',a:'🇯🇵 Japón',g:'Grupo F'},
+    {d:'14 jun',t:'23:00',h:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra',a:'🇵🇦 Panamá',g:'Grupo L'},
+    {d:'15 jun',t:'17:00',h:'🇧🇪 Bélgica',a:'🇪🇬 Egipto',g:'Grupo G'},
+    {d:'15 jun',t:'20:00',h:'🇨🇦 Canadá',a:'🇨🇭 Suiza',g:'Grupo B'},
   ];
-  return `<div class="anote">📡 Las APIs se conectarán automáticamente el 11/6. Aquí algunos partidos de la fase de grupos:</div>`+
-  upcoming.map(m=>`<div class="fc"><div class="fdate">${m.d}<br>${m.t}</div><div class="fteams"><div class="ftr">${m.h}<span class="fvs">vs</span>${m.a}</div></div><div class="fscore">—:—</div><div class="fbadge bgrp">${m.g}</div></div>`).join('');
+  return upcoming.map(m=>`<div class="fc"><div class="fdate">${m.d}<br>${m.t}</div><div class="fteams"><div class="ftr">${m.h}<span class="fvs">vs</span>${m.a}</div></div><div class="fscore">—:—</div><div class="fbadge bgrp">${m.g}</div></div>`).join('');
 }
 function buildSidebarNext(){
-  return [['🇲🇽','México','🇵🇦','Panamá','11 jun · 22:00','Grupo A'],['🇺🇸','USA','🇨🇺','Cuba','12 jun · 20:00','Grupo B'],['🇦🇷','Argentina','🇪🇨','Ecuador','13 jun · 23:00','Grupo D']].map(([f1,n1,f2,n2,t,g])=>`<div class="nx"><div class="nxh"><div class="nxt">${t}</div><div class="nxg">${g}</div></div><div class="nxteams"><div class="nxteam"><div class="nxfl">${f1}</div><div class="nxnm">${n1}</div></div><div class="nxvs">VS</div><div class="nxteam"><div class="nxfl">${f2}</div><div class="nxnm">${n2}</div></div></div></div>`).join('');
+  return [
+    ['🇲🇽','México','🇿🇦','Sudáfrica','11 jun · 22:00','Grupo A','Ciudad de México'],
+    ['🇧🇷','Brasil','🇲🇦','Marruecos','12 jun · 17:00','Grupo C','Los Angeles'],
+    ['🇦🇷','Argentina','🇩🇿','Argelia','12 jun · 23:00','Grupo J','Dallas'],
+  ].map(([f1,n1,f2,n2,t,g,v])=>`<div class="nx"><div class="nxh"><div class="nxt">${t}</div><div class="nxg">${g}</div></div><div class="nxteams"><div class="nxteam"><div class="nxfl">${f1}</div><div class="nxnm">${n1}</div></div><div class="nxvs">VS</div><div class="nxteam"><div class="nxfl">${f2}</div><div class="nxnm">${n2}</div></div></div><div class="nxvn">📍 ${v}</div></div>`).join('');
 }
 
 function renderMatches(filter){
@@ -692,19 +735,20 @@ async function fetchStandings(){
   document.getElementById('groups-container').innerHTML=`<div class="errbox">⚠️ Los grupos con posiciones en vivo estarán disponibles desde el 11/6.</div>`+demoGroups();
 }
 
+// ✅ Grupos OFICIALES — Sorteo 5 dic 2025, Kennedy Center Washington D.C.
 const DEMO_GROUPS=[
-  {n:'Grupo A',t:[{f:'🇲🇽',n:'México'},{f:'🇵🇦',n:'Panamá'},{f:'🇯🇲',n:'Jamaica'},{f:'🇶🇦',n:'Qatar'}]},
-  {n:'Grupo B',t:[{f:'🇺🇸',n:'USA'},{f:'🇧🇴',n:'Bolivia'},{f:'🇨🇴',n:'Colombia'},{f:'🇮🇩',n:'Indonesia'}]},
-  {n:'Grupo C',t:[{f:'🇨🇦',n:'Canadá'},{f:'🇹🇳',n:'Túnez'},{f:'🇧🇪',n:'Bélgica'},{f:'🇾🇪',n:'Yemen'}]},
-  {n:'Grupo D',t:[{f:'🇦🇷',n:'Argentina'},{f:'🇪🇨',n:'Ecuador'},{f:'🇦🇺',n:'Australia'},{f:'🇳🇬',n:'Nigeria'}]},
-  {n:'Grupo E',t:[{f:'🇧🇷',n:'Brasil'},{f:'🇨🇱',n:'Chile'},{f:'🇷🇸',n:'Serbia'},{f:'🇲🇦',n:'Marruecos'}]},
-  {n:'Grupo F',t:[{f:'🇫🇷',n:'Francia'},{f:'🇸🇦',n:'Arabia S.'},{f:'🇨🇷',n:'Costa Rica'},{f:'🇺🇦',n:'Ucrania'}]},
-  {n:'Grupo G',t:[{f:'🇪🇸',n:'España'},{f:'🇯🇵',n:'Japón'},{f:'🇳🇱',n:'P.Bajos'},{f:'🇸🇳',n:'Senegal'}]},
-  {n:'Grupo H',t:[{f:'🇵🇹',n:'Portugal'},{f:'🇿🇦',n:'Sudáfrica'},{f:'🇩🇰',n:'Dinamarca'},{f:'🇵🇾',n:'Paraguay'}]},
-  {n:'Grupo I',t:[{f:'🇩🇪',n:'Alemania'},{f:'🇭🇳',n:'Honduras'},{f:'🇨🇩',n:'R.D.Congo'},{f:'🇺🇾',n:'Uruguay'}]},
-  {n:'Grupo J',t:[{f:'🇬🇧',n:'Inglaterra'},{f:'🇸🇯',n:'Eslovenia'},{f:'🇭🇷',n:'Croacia'},{f:'🇪🇬',n:'Egipto'}]},
-  {n:'Grupo K',t:[{f:'🇰🇷',n:'Corea S.'},{f:'🇮🇷',n:'Irán'},{f:'🇵🇱',n:'Polonia'},{f:'🇬🇳',n:'Guinea'}]},
-  {n:'Grupo L',t:[{f:'🇺🇾',n:'Uruguay'},{f:'🇨🇳',n:'China'},{f:'🇬🇭',n:'Ghana'},{f:'🇨🇮',n:'Costa Marfil'}]},
+  {n:'Grupo A',t:[{f:'🇲🇽',n:'México'},{f:'🇿🇦',n:'Sudáfrica'},{f:'🇰🇷',n:'Corea S.'},{f:'🏳️',n:'Playoff D'}]},
+  {n:'Grupo B',t:[{f:'🇨🇦',n:'Canadá'},{f:'🏳️',n:'Playoff A'},{f:'🇶🇦',n:'Qatar'},{f:'🇨🇭',n:'Suiza'}]},
+  {n:'Grupo C',t:[{f:'🇧🇷',n:'Brasil'},{f:'🇲🇦',n:'Marruecos'},{f:'🇭🇹',n:'Haití'},{f:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',n:'Escocia'}]},
+  {n:'Grupo D',t:[{f:'🇺🇸',n:'USA'},{f:'🇵🇾',n:'Paraguay'},{f:'🇦🇺',n:'Australia'},{f:'🏳️',n:'Playoff C'}]},
+  {n:'Grupo E',t:[{f:'🇩🇪',n:'Alemania'},{f:'🇨🇼',n:'Curaçao'},{f:'🇨🇮',n:'Costa Marfil'},{f:'🇪🇨',n:'Ecuador'}]},
+  {n:'Grupo F',t:[{f:'🇳🇱',n:'P.Bajos'},{f:'🇯🇵',n:'Japón'},{f:'🏳️',n:'Playoff B'},{f:'🇹🇳',n:'Túnez'}]},
+  {n:'Grupo G',t:[{f:'🇧🇪',n:'Bélgica'},{f:'🇪🇬',n:'Egipto'},{f:'🇮🇷',n:'Irán'},{f:'🇳🇿',n:'Nueva Zelanda'}]},
+  {n:'Grupo H',t:[{f:'🇪🇸',n:'España'},{f:'🇨🇻',n:'Cabo Verde'},{f:'🇸🇦',n:'Arabia S.'},{f:'🇺🇾',n:'Uruguay'}]},
+  {n:'Grupo I',t:[{f:'🇫🇷',n:'Francia'},{f:'🇸🇳',n:'Senegal'},{f:'🏳️',n:'Intercont. 2'},{f:'🇳🇴',n:'Noruega'}]},
+  {n:'Grupo J',t:[{f:'🇦🇷',n:'Argentina'},{f:'🇩🇿',n:'Argelia'},{f:'🇦🇹',n:'Austria'},{f:'🇯🇴',n:'Jordania'}]},
+  {n:'Grupo K',t:[{f:'🇵🇹',n:'Portugal'},{f:'🏳️',n:'Intercont. 1'},{f:'🇺🇿',n:'Uzbekistán'},{f:'🇨🇴',n:'Colombia'}]},
+  {n:'Grupo L',t:[{f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',n:'Inglaterra'},{f:'🇭🇷',n:'Croacia'},{f:'🇬🇭',n:'Ghana'},{f:'🇵🇦',n:'Panamá'}]},
 ];
 function demoGroups(){
   return `<div class="gg">`+DEMO_GROUPS.slice(0,8).map(x=>`<div class="gc"><div class="gh"><span class="gn">${x.n}</span><span class="gj">Fixture</span></div><table class="gt"><thead><tr><th>País</th><th>PJ</th><th>PTS</th><th>GF</th><th>GD</th></tr></thead><tbody>${x.t.map((t,i)=>`<tr><td><div class="cc">${i<2?'<div class="qb"></div>':''}${t.f} ${t.n}</div></td><td>0</td><td class="pts">0</td><td>0</td><td>0</td></tr>`).join('')}</tbody></table></div>`).join('')+`</div>`;
@@ -810,12 +854,12 @@ async function fetchNews(){
   // 3) Static demo (always works, shows Mundial-relevant headlines)
   setStatus('news','ok');
   const demoArts=[
-    {title:'Argentina presenta su lista de 26 convocados para el Mundial 2026',link:'#',source:'Olé',date:new Date().toISOString()},
-    {title:'Brasil confirma a Vinicius Jr. como capitán para el Mundial 2026',link:'#',source:'ESPN',date:new Date(Date.now()-3600000).toISOString()},
-    {title:'La FIFA confirma el calendario completo: 104 partidos del 11 jun al 19 jul',link:'#',source:'FIFA.com',date:new Date(Date.now()-7200000).toISOString()},
-    {title:'El Estadio Azteca será sede del partido inaugural del Mundial 2026',link:'#',source:'Marca',date:new Date(Date.now()-10800000).toISOString()},
-    {title:'Messi confirma que el Mundial 2026 será su última Copa del Mundo',link:'#',source:'TyC Sports',date:new Date(Date.now()-14400000).toISOString()},
-    {title:'El nuevo formato del Mundial con 48 equipos: todo lo que necesitás saber',link:'#',source:'La Nación',date:new Date(Date.now()-18000000).toISOString()},
+    {title:'Argentina y su lista de convocados para el Mundial 2026',link:'https://news.google.com/search?q=Argentina+convocados+Mundial+2026&hl=es',source:'Google News',date:new Date().toISOString()},
+    {title:'Brasil y Vinicius Jr. de cara al Mundial 2026',link:'https://news.google.com/search?q=Brasil+Vinicius+Mundial+2026&hl=es',source:'Google News',date:new Date(Date.now()-3600000).toISOString()},
+    {title:'FIFA World Cup 2026: calendario completo, 104 partidos del 11 jun al 19 jul',link:'https://news.google.com/search?q=FIFA+World+Cup+2026+calendario&hl=es',source:'Google News',date:new Date(Date.now()-7200000).toISOString()},
+    {title:'Estadio Azteca: sede del partido inaugural del Mundial 2026',link:'https://news.google.com/search?q=Azteca+inauguracion+Mundial+2026&hl=es',source:'Google News',date:new Date(Date.now()-10800000).toISOString()},
+    {title:'Messi en el Mundial 2026: lo que se sabe sobre su participación',link:'https://news.google.com/search?q=Messi+Mundial+2026&hl=es',source:'Google News',date:new Date(Date.now()-14400000).toISOString()},
+    {title:'El nuevo formato del Mundial 2026 con 48 equipos explicado',link:'https://news.google.com/search?q=formato+Mundial+2026+48+equipos&hl=es',source:'Google News',date:new Date(Date.now()-18000000).toISOString()},
   ];
   renderNews(demoArts);
 }
@@ -1008,7 +1052,7 @@ function hugoOffline(txt){
   for(const entry of HUGO_KB){
     if(entry.k.some(k=>lower.includes(k))) return entry.r;
   }
-  return 'Buena pregunta! Cuando la página esté publicada online, te respondo con IA en tiempo real. Por ahora sé que el Mundial 2026 arranca el 11/6 en USA, Canadá y México con 48 equipos. ⚽';
+  return '¡Buena pregunta! El Mundial 2026 arranca el 11 de junio en USA, Canadá y México con 48 equipos en 12 grupos. ¿Querés saber algo específico sobre el torneo? ⚽';
 }
 
 async function hugoSend(){
