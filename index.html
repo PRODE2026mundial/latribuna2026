@@ -785,111 +785,64 @@ function renderOdds(evs){
 // ════════════════════════════════════════════
 // NEWS — GNews → RSS fallback
 // ════════════════════════════════════════════
-// ✅ NOTICIAS — GNews primero (key propia), luego RSS, luego fallback con links reales
+// ✅ NOTICIAS — ESPN Public API (artículos reales, sin key)
 async function fetchNews(){
 
-  // ─── 1. GNews API (PRIMERA opción — devuelve URLs reales de artículos) ───
+  // 1. ESPN News API — sin key, CORS ok, artículos reales del Mundial
+  try{
+    const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news?limit=8');
+    if(!r.ok) throw new Error('ESPN News ' + r.status);
+    const d = await r.json();
+    const arts = (d.articles||[])
+      .filter(a => a.headline && a.links?.web?.href)
+      .map(a => ({
+        title: a.headline,
+        link: a.links.web.href,
+        source: 'ESPN',
+        date: a.published || new Date().toISOString()
+      }));
+    if(arts.length){
+      setStatus('news','ok');
+      renderNews(arts.slice(0,6));
+      console.log('✅ ESPN News:', arts.length, 'artículos');
+      return;
+    }
+  }catch(e){ console.warn('ESPN News falló:', e.message) }
+
+  // 2. GNews (backup con tu key)
   try{
     const lang = currentLang==='en' ? 'en' : 'es';
     const q = encodeURIComponent(currentLang==='en' ? 'FIFA World Cup 2026' : 'Mundial 2026 fútbol');
-    const url = `https://gnews.io/api/v4/search?q=${q}&lang=${lang}&max=6&sortby=publishedAt&apikey=${GNEWS_KEY}`;
-    const r = await fetch(url);
-    if(!r.ok) throw new Error('GNews HTTP ' + r.status);
+    const r = await fetch(`https://gnews.io/api/v4/search?q=${q}&lang=${lang}&max=6&sortby=publishedAt&apikey=${GNEWS_KEY}`);
+    if(!r.ok) throw new Error('GNews ' + r.status);
     const d = await r.json();
-    if(d.articles && d.articles.length){
-      const arts = d.articles
-        .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
-        .map(a => ({
-          title: a.title,
-          link: a.url,          // URL real del artículo original
-          source: a.source?.name || 'GNews',
-          date: a.publishedAt
-        }));
-      if(arts.length){
-        setStatus('news','ok');
-        renderNews(arts.slice(0,6));
-        console.log('✅ Noticias desde GNews —', arts.length, 'artículos');
-        return;
-      }
-    }
+    const arts = (d.articles||[])
+      .filter(a => a.title && a.url && !a.title.includes('[Removed]'))
+      .map(a => ({title:a.title, link:a.url, source:a.source?.name||'GNews', date:a.publishedAt}));
+    if(arts.length){ setStatus('news','ok'); renderNews(arts.slice(0,6)); console.log('✅ GNews backup'); return; }
   }catch(e){ console.warn('GNews falló:', e.message) }
 
-  // ─── 2. RSS via rss2json (backup) ───────────────────────────────────────
+  // 3. RSS via rss2json (segundo backup)
   const feeds = currentLang==='en'
-    ? [
-        {url:'https://www.espn.com/espn/rss/soccer/news', name:'ESPN'},
-        {url:'https://feeds.bbci.co.uk/sport/football/rss.xml', name:'BBC Sport'},
-        {url:'https://www.goal.com/en/feeds/news', name:'Goal.com'},
-      ]
-    : [
-        {url:'https://as.com/rss/tags/mundial_2026.xml', name:'AS'},
-        {url:'https://e00-marca.uecdn.es/rss/futbol/futbol-internacional.xml', name:'Marca'},
-        {url:'https://www.ole.com.ar/rss/futbol-internacional/', name:'Olé'},
-      ];
-
-  const arts = [];
+    ? [{url:'https://feeds.bbci.co.uk/sport/football/rss.xml', name:'BBC Sport'}]
+    : [{url:'https://as.com/rss/tags/mundial_2026.xml', name:'AS'},{url:'https://e00-marca.uecdn.es/rss/futbol/futbol-internacional.xml', name:'Marca'}];
   for(const f of feeds){
     try{
-      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=4`);
+      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=6`);
       if(!r.ok) continue;
       const d = await r.json();
-      if(d.status!=='ok' || !d.items?.length) continue;
-      d.items
-        .filter(i => i.title && i.link && !i.link.includes('google.com'))
-        .forEach(i => arts.push({
-          title: i.title,
-          link: i.link,         // URL real del artículo
-          source: f.name,
-          date: i.pubDate
-        }));
-      if(arts.length >= 6) break;
+      const arts = (d.items||[]).filter(i=>i.title&&i.link&&!i.link.includes('google.com')).map(i=>({title:i.title,link:i.link,source:f.name,date:i.pubDate}));
+      if(arts.length){ setStatus('news','ok'); renderNews(arts.slice(0,6)); console.log('✅ RSS:', f.name); return; }
     }catch(_){}
   }
 
-  if(arts.length){
-    setStatus('news','ok');
-    renderNews(arts.sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,6));
-    console.log('✅ Noticias desde RSS —', arts.length, 'artículos');
-    return;
-  }
-
-  // ─── 3. Fallback — artículos reales curados (links directos) ────────────
-  setStatus('news','ok');
-  renderNews([
-    {
-      title: 'Grupos del Mundial 2026: Argentina, Brasil, España y todos los equipos',
-      link: 'https://as.com/futbol/mundial/2026/grupos/',
-      source: 'AS', date: new Date().toISOString()
-    },
-    {
-      title: 'Calendario completo del Mundial 2026: fechas, horarios y sedes',
-      link: 'https://as.com/futbol/mundial/2026/calendario/',
-      source: 'AS', date: new Date(Date.now()-3600000).toISOString()
-    },
-    {
-      title: 'Todo sobre el Mundial 2026: formato, clasificados y más',
-      link: 'https://www.ole.com.ar/mundial-2026/',
-      source: 'Olé', date: new Date(Date.now()-7200000).toISOString()
-    },
-    {
-      title: 'FIFA World Cup 2026: what you need to know',
-      link: 'https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026',
-      source: 'FIFA', date: new Date(Date.now()-10800000).toISOString()
-    },
-    {
-      title: 'Selección argentina: convocados y novedades para el Mundial 2026',
-      link: 'https://www.ole.com.ar/seleccion-argentina/',
-      source: 'Olé', date: new Date(Date.now()-14400000).toISOString()
-    },
-    {
-      title: 'Estadios del Mundial 2026: las 16 sedes en USA, México y Canadá',
-      link: 'https://as.com/futbol/mundial/2026/estadios/',
-      source: 'AS', date: new Date(Date.now()-18000000).toISOString()
-    },
-  ]);
-  console.log('ℹ️ Usando fallback de noticias curadas');
+  // 4. Sin noticias — link directo a ESPN
+  setStatus('news','err');
+  document.getElementById('news-container').innerHTML=`<div class="loadbox" style="background:var(--g6);border-color:var(--g4)">
+    📡 Noticias disponibles cuando empiece el torneo.<br>
+    <a href="https://www.espn.com/soccer/league/_/name/fifa.world.cup" target="_blank" style="color:var(--g1);font-weight:700;margin-top:6px;display:inline-block">Ver noticias en ESPN →</a>
+  </div>`;
 }
-
 
 function renderNews(arts){
   function timeAgo(dateStr){
